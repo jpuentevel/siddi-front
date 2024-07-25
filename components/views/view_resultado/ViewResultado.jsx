@@ -4,15 +4,14 @@ import React from 'react'
 import { useState } from 'react';
 import Link from 'next/link'
 
-const ViewResultado = () => {
+const ViewResultado = (props) => {
 
   const FECHA = "18-07-2024"
-  const ID = "1007968652"
   const NOMBRE = "José Alejandro Puente Velásquez"
   const PESO = 90
   const TALLA = 180
 
-  const [idInfante, setIdInfante] = useState(ID);
+  const [idInfante, setIdInfante] = useState(props.docInfante);
   const [nombreInfante, setNombreInfante] = useState(NOMBRE);
   const [pesoInfante, setPesoInfante] = useState(PESO);
   const [tallaInfante, setTallaInfante] = useState(TALLA);

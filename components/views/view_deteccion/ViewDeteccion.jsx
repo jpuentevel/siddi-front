@@ -1,9 +1,10 @@
 "use client"
 
-import React from 'react'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import axios from 'axios';
+import { usingDetectionModel } from '@/functions/using_detection_model/UsingDetectionModel';
+import Image from 'next/image';
 
 const ViewDeteccion = () => {
 
@@ -16,41 +17,33 @@ const ViewDeteccion = () => {
   const [pesoInfante, setPesoInfante] = useState(0);
   const [tallaInfante, setTallaInfante] = useState(0);
   const [imagenInfante, setImagenInfante] = useState(null);
+  const [proccessedImage, setProcessedImage] = useState()
+  const [prediction, setPrediction] = useState("");
+  const [idDeteccion, setIdDeteccion] = useState(0)
 
-  const handleIdInfanteChange = (e) => {
+  const HandleIdInfanteChange = (e) => {
     setIdInfante(e.target.value);
   }
-  const handleNombreInfanteChange = (e) => {
+  const HandleNombreInfanteChange = (e) => {
     setNombreInfante(e.target.value);
   }
-  const handleEdadInfanteChange = (e) => {
+  const HandleEdadInfanteChange = (e) => {
     setEdadInfante(e.target.value);
   }
-  const handleSexoInfanteChange = (e) => {
+  const HandleSexoInfanteChange = (e) => {
     setSexoInfante(e.target.value);
   }
-  const handlePesoInfanteChange = (e) => {
+  const HandlePesoInfanteChange = (e) => {
     setPesoInfante(e.target.value);
   }
-  const handleTallaInfanteChange = (e) => {
+  const HandleTallaInfanteChange = (e) => {
     setTallaInfante(e.target.value);
   }
-  const handleImagenInfanteChange = (e) => {
-    setImagenInfante(e.target.value);
+  const HandleImagenInfanteChange = (e) => {
+    setImagenInfante(e.target.files[0]);
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const data = {
-      id: idInfante,
-      nombre: nombreInfante,
-      edad: edadInfante,
-      sexo: sexoInfante,
-      peso: pesoInfante,
-      talla: tallaInfante,
-      imagen: imagenInfante
-    }
+  const FetchingData = (data) => {
 
     const requestOptions = {
       method: 'POST',
@@ -59,6 +52,114 @@ const ViewDeteccion = () => {
     }
 
     //Falta que Ele ajuste la API para seguir con fetch
+    return true
+  }
+
+  const GetImageProcessed = async (file) => {
+
+    const formDataImg = new FormData()
+    formDataImg.append("imagen_path", file)
+
+    try {
+      const response = await axios.post("https://whale-app-cka7j.ondigitalocean.app/imagen", formDataImg, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      console.log("Respuesta API imagen proccess: ", response.data)
+      setProcessedImage(response.data)
+
+    } catch (error) {
+      console.error('Error API imagen:', error);
+    }
+  }
+
+  /* const GetModelResult = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        try {
+          const base64String = reader.result.split(',')[1]
+          const imgpro = GetImageProcessed(`data:image/jpeg;base64,${base64String}`)
+          console.log("Resultado de llamada a GetImageProcessed: ", imgpro)
+          setProcessedImage(imgpro)
+          const result = await usingDetectionModel(proccessedImage)
+          setPrediction(result);
+          console.log("Predicción from GetModelResult: ", result);
+          resolve(result);
+        } catch (error) {
+          console.log('Error durante la predicción:', error);
+          reject(error);
+        }
+      };
+      reader.onerror = (error) => {
+        console.log('Error al leer el archivo:', error);
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
+  }; */
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await GetImageProcessed(imagenInfante)
+      console.log("Imagen procesada handle submit: ", proccessedImage)
+    } catch (error) {
+      console.log("Error en handle submit: ", error)
+    }
+
+
+    /* if (imagenInfante) {
+      try {
+        await GetModelResult(imagenInfante);
+      } catch (error) {
+        console.log('Error durante el procesamiento de la imagen:', error);
+        return;
+      }
+    } else {
+      console.log("No se ha seleccionado ninguna imagen.");
+      return;
+    } */
+
+    setIdDeteccion(Math.random() * (100 - 0) + 0)
+
+    /* if (imagenInfante) {
+      await ProccessImage(imagenInfante, setPrediction)
+      console.log("Dio Click")
+    } else {
+      console.log("No hay imagen")
+      return
+    } */
+
+    /* const data = {
+      id: idInfante,
+      nombre: nombreInfante,
+      edad: edadInfante,
+      sexo: sexoInfante,
+      peso: pesoInfante,
+      talla: tallaInfante,
+      imagen: imagenInfante,
+      estado: prediction
+    } */
+
+    const data = {
+      id: idInfante,
+      nombre: nombreInfante,
+      edad: edadInfante,
+      sexo: sexoInfante,
+      peso: pesoInfante,
+      talla: tallaInfante,
+      imagen: imagenInfante,
+      estado: prediction
+    };
+
+    if (FetchingData(data)) {
+      setIdDeteccion(Math.random() * (100 - 0) + 0)
+      router.push(`resultado/${idInfante}/${idDeteccion}`)
+    }
   }
 
   return (
@@ -67,9 +168,9 @@ const ViewDeteccion = () => {
         <b>Datos básicos del infante</b>
       </h1>
 
-      <form className="flex flex-col my-3">
+      <div className="flex flex-col my-3">
         <div className="my-3 content-start">
-          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3" for="id_infante">
+          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3">
             Identificación
           </label>
           <input
@@ -78,12 +179,12 @@ const ViewDeteccion = () => {
             type="text"
             placeholder="0123456789"
             value={idInfante}
-            onChange={handleIdInfanteChange}
+            onChange={HandleIdInfanteChange}
             required
           ></input>
         </div>
         <div className="my-3 content-start">
-          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3" for="nombre_infante">
+          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3">
             Nombre
           </label>
           <input
@@ -92,11 +193,11 @@ const ViewDeteccion = () => {
             type="text"
             placeholder="Jorge Pérez"
             value={nombreInfante}
-            onChange={handleNombreInfanteChange}
+            onChange={HandleNombreInfanteChange}
           ></input>
         </div>
         <div className="my-3 content-start">
-          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3" for="edad_infante">
+          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3">
             Edad
           </label>
           <input
@@ -105,19 +206,19 @@ const ViewDeteccion = () => {
             type="number"
             placeholder="5"
             value={edadInfante}
-            onChange={handleEdadInfanteChange}
+            onChange={HandleEdadInfanteChange}
             required
           ></input>
         </div>
         <div className="my-3 content-start">
-          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3" for="sexo_infante">
+          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3">
             Sexo
           </label>
           <select
             className="border rounded w-full mt-3 py-2 px-3 text-purple-700 sm:text-xl text-lg leading-tight focus:outline-none focus:shadow-outline"
             id="sexo_infante"
             value={sexoInfante}
-            onChange={handleSexoInfanteChange}
+            onChange={HandleSexoInfanteChange}
             required
           >
             <option value="H">Hombre</option>
@@ -125,7 +226,7 @@ const ViewDeteccion = () => {
           </select>
         </div>
         <div className="my-3 content-start">
-          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3" for="peso_infante">
+          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3">
             Peso (kg)
           </label>
           <input
@@ -134,12 +235,12 @@ const ViewDeteccion = () => {
             type="number"
             placeholder="30"
             value={pesoInfante}
-            onChange={handlePesoInfanteChange}
+            onChange={HandlePesoInfanteChange}
             required
           ></input>
         </div>
         <div className="my-3 content-start">
-          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3" for="talla_infante">
+          <label className="text-purple-700 sm:text-xl text-lg font-bold mb-3">
             Talla (cm)
           </label>
           <input
@@ -148,7 +249,7 @@ const ViewDeteccion = () => {
             type="number"
             placeholder="100"
             value={tallaInfante}
-            onChange={handleTallaInfanteChange}
+            onChange={HandleTallaInfanteChange}
             required
           ></input>
         </div>
@@ -160,29 +261,30 @@ const ViewDeteccion = () => {
             type="file"
             accept=".png,.jpg"
             className="text-purple-700 mt-3 w-full font-semibold sm:text-lg text-base bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-purple-700 rounded"
-            value={imagenInfante}
-            onChange={handleImagenInfanteChange}
+            /* value={imagenInfante} */
+            onChange={HandleImagenInfanteChange}
             required
           />
           <p className="sm:text-lg text-base leading-tight text-purple-700 mt-2">Sólo se permiten archivos PNG y JPG.</p>
         </div>
+        {/* <div className="flex flex-col items-center mt-3">
+          <Image
+            src={proccessedImage}
+            width={500}
+            height={500}
+            alt="Imagen procesada"
+          />
+        </div> */}
         <div className="flex flex-col items-center mt-3">
-          {/* <button
+          <button
             href="#"
-            type="submit"
             className="w-64 focus:outline-none text-purple-200 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-center text-xl px-3 py-2.5 mt-3 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
-            onSubmit={handleSubmit}
+            onClick={HandleSubmit}
           >
             Realizar Deteccion
-          </button> */}
-          <Link
-            href="/resultado"
-            className="w-64 focus:outline-none text-purple-200 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-center text-xl px-3 py-2.5 mt-3 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
-          >
-            Realizar Deteccion
-          </Link>
+          </button>
         </div>
-      </form>
+      </div>
     </div>
   )
 }

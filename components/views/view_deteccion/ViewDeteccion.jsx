@@ -2,9 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'
-import axios from 'axios';
 import { usingDetectionModel } from '@/functions/using_detection_model/UsingDetectionModel';
-import Image from 'next/image';
 
 const ViewDeteccion = () => {
 
@@ -17,7 +15,7 @@ const ViewDeteccion = () => {
   const [pesoInfante, setPesoInfante] = useState(0);
   const [tallaInfante, setTallaInfante] = useState(0);
   const [imagenInfante, setImagenInfante] = useState(null);
-  const [proccessedImage, setProcessedImage] = useState()
+  const [tensorImg, setTensorImg] = useState(null)
   const [prediction, setPrediction] = useState("");
   const [idDeteccion, setIdDeteccion] = useState(0)
 
@@ -55,95 +53,63 @@ const ViewDeteccion = () => {
     return true
   }
 
-  const GetImageProcessed = async (file) => {
+  const blobToImage = async (imageBitmap) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = imageBitmap.width;
+    canvas.height = imageBitmap.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(imageBitmap, 0, 0);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    return imageData
+  }
+
+  const GetPrediction = async (file) => {
 
     const formDataImg = new FormData()
     formDataImg.append("imagen_path", file)
 
     try {
-      const response = await axios.post("https://whale-app-cka7j.ondigitalocean.app/imagen", formDataImg, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
+      const response = await fetch('https://whale-app-cka7j.ondigitalocean.app/imagen', {
+        method: 'POST',
+        body: formDataImg
+        // No es necesario establecer Content-Type, Fetch lo hace automáticamente
+      });
 
-      console.log("Respuesta API imagen proccess: ", response.data)
-      setProcessedImage(response.data)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const resultFetch = await response.blob();
+      const imageBitmap = await createImageBitmap(resultFetch);
+      const imgFromBlob = await blobToImage(imageBitmap)
+
+      console.log("typeof imgFromBlob: ", typeof imgFromBlob)
+      console.log("imgFromBlob: ", imgFromBlob)
+      console.log("imgFromBlob.data: ", imgFromBlob.data)
+
+      try {
+        const result = await usingDetectionModel(imgFromBlob)
+        setPrediction(result);
+        console.log("Predicción from GetPrediction: ", result);
+      } catch (error) {
+        console.log('Error from GetPrediction:', error);
+      }
 
     } catch (error) {
-      console.error('Error API imagen:', error);
+      console.error('Error GetPrediction: ', error);
     }
   }
-
-  /* const GetModelResult = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        try {
-          const base64String = reader.result.split(',')[1]
-          const imgpro = GetImageProcessed(`data:image/jpeg;base64,${base64String}`)
-          console.log("Resultado de llamada a GetImageProcessed: ", imgpro)
-          setProcessedImage(imgpro)
-          const result = await usingDetectionModel(proccessedImage)
-          setPrediction(result);
-          console.log("Predicción from GetModelResult: ", result);
-          resolve(result);
-        } catch (error) {
-          console.log('Error durante la predicción:', error);
-          reject(error);
-        }
-      };
-      reader.onerror = (error) => {
-        console.log('Error al leer el archivo:', error);
-        reject(error);
-      };
-      reader.readAsDataURL(file);
-    });
-  }; */
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await GetImageProcessed(imagenInfante)
-      console.log("Imagen procesada handle submit: ", proccessedImage)
+      await GetPrediction(imagenInfante)
     } catch (error) {
-      console.log("Error en handle submit: ", error)
+      console.log("Error img en handle submit: ", error)
     }
-
-
-    /* if (imagenInfante) {
-      try {
-        await GetModelResult(imagenInfante);
-      } catch (error) {
-        console.log('Error durante el procesamiento de la imagen:', error);
-        return;
-      }
-    } else {
-      console.log("No se ha seleccionado ninguna imagen.");
-      return;
-    } */
-
-    setIdDeteccion(Math.random() * (100 - 0) + 0)
-
-    /* if (imagenInfante) {
-      await ProccessImage(imagenInfante, setPrediction)
-      console.log("Dio Click")
-    } else {
-      console.log("No hay imagen")
-      return
-    } */
-
-    /* const data = {
-      id: idInfante,
-      nombre: nombreInfante,
-      edad: edadInfante,
-      sexo: sexoInfante,
-      peso: pesoInfante,
-      talla: tallaInfante,
-      imagen: imagenInfante,
-      estado: prediction
-    } */
 
     const data = {
       id: idInfante,

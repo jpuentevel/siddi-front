@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'
 import { usingDetectionModel } from '@/functions/using_detection_model/UsingDetectionModel';
 
@@ -8,14 +8,14 @@ const ViewDeteccion = () => {
 
   const router = useRouter();
 
-  const [idInfante, setIdInfante] = useState("");
-  const [nombreInfante, setNombreInfante] = useState("");
-  const [edadInfante, setEdadInfante] = useState(0);
-  const [sexoInfante, setSexoInfante] = useState("H");
-  const [pesoInfante, setPesoInfante] = useState(0);
-  const [tallaInfante, setTallaInfante] = useState(0);
-  const [imagenInfante, setImagenInfante] = useState(null);
-  const [prediction, setPrediction] = useState("");
+  const [idInfante, setIdInfante] = useState("")
+  const [nombreInfante, setNombreInfante] = useState("")
+  const [edadInfante, setEdadInfante] = useState(0)
+  const [sexoInfante, setSexoInfante] = useState("H")
+  const [pesoInfante, setPesoInfante] = useState(0)
+  const [tallaInfante, setTallaInfante] = useState(0)
+  const [imagenInfante, setImagenInfante] = useState(null)
+  const [prediction, setPrediction] = useState("")
   const [idDeteccion, setIdDeteccion] = useState(0)
 
   const HandleIdInfanteChange = (e) => {
@@ -40,17 +40,42 @@ const ViewDeteccion = () => {
     setImagenInfante(e.target.files[0]);
   }
 
-  const FetchingData = (data) => {
+  useEffect(() => {
+    if (prediction) {
+      const sendFormData = async () => {
 
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+        console.log("id", idInfante)
+        console.log("nombre", nombreInfante)
+        console.log("edad", edadInfante)
+        console.log("sexo", sexoInfante)
+        console.log("peso", pesoInfante)
+        console.log("talla", tallaInfante)
+        console.log("imagen_path", imagenInfante)
+        console.log("grado_desnutricion_red", prediction)
+
+        const formData = new FormData();
+        formData.append("id", idInfante);
+        formData.append("nombre", nombreInfante);
+        formData.append("edad", edadInfante);
+        formData.append("sexo", sexoInfante);
+        formData.append("peso", pesoInfante);
+        formData.append("talla", tallaInfante);
+        formData.append("imagen_path", imagenInfante);
+        formData.append("grado_desnutricion_red", prediction);
+
+        console.log(formData);
+
+        const isFetched = await FetchingData(formData);
+
+        if (isFetched) {
+          console.log("Entró a antes del router push: ", idDeteccion);
+          router.push(`resultado/${idInfante}/${idDeteccion}`);
+        }
+      };
+
+      sendFormData();
     }
-
-    //Falta que Ele ajuste la API para seguir con fetch
-    return true
-  }
+  }, [prediction]);
 
   const blobToImage = async (imageBitmap) => {
     const canvas = document.createElement('canvas');
@@ -73,7 +98,6 @@ const ViewDeteccion = () => {
       const response = await fetch('https://whale-app-cka7j.ondigitalocean.app/imagen', {
         method: 'POST',
         body: formDataImg
-        // No es necesario establecer Content-Type, Fetch lo hace automáticamente
       });
 
       if (!response.ok) {
@@ -84,15 +108,9 @@ const ViewDeteccion = () => {
       const imageBitmap = await createImageBitmap(resultFetch);
       const imgFromBlob = await blobToImage(imageBitmap)
 
-      console.log("typeof imgFromBlob: ", typeof imgFromBlob)
-      console.log("imgFromBlob: ", imgFromBlob)
-      console.log("imgFromBlob.data: ", imgFromBlob.data)
-
       try {
         const result = await usingDetectionModel(imgFromBlob)
         setPrediction(result);
-        console.log("Predicción from GetPrediction: ", result);
-        console.log("Predicción from useState: ", prediction);
       } catch (error) {
         console.log('Error from GetPrediction:', error);
       }
@@ -100,6 +118,23 @@ const ViewDeteccion = () => {
     } catch (error) {
       console.error('Error GetPrediction: ', error);
     }
+  }
+
+  const FetchingData = async (data) => {
+
+    const response = await fetch('https://whale-app-cka7j.ondigitalocean.app/infantes', {
+      method: 'POST',
+      body: data
+    })
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok on FetchingData');
+    } else {
+      response.json().then(body => setIdDeteccion(body.estado_id));
+      console.log("Cambió idDeteccion")
+    }
+
+    return response.ok
   }
 
   const HandleSubmit = async (e) => {
@@ -111,21 +146,33 @@ const ViewDeteccion = () => {
       console.log("Error img en handle submit: ", error)
     }
 
-    const data = {
-      id: idInfante,
-      nombre: nombreInfante,
-      edad: edadInfante,
-      sexo: sexoInfante,
-      peso: pesoInfante,
-      talla: tallaInfante,
-      imagen: imagenInfante,
-      estado: prediction
-    };
+    /* console.log("id", idInfante)
+    console.log("nombre", nombreInfante)
+    console.log("edad", edadInfante)
+    console.log("sexo", sexoInfante)
+    console.log("peso", pesoInfante)
+    console.log("talla", tallaInfante)
+    console.log("imagen_path", imagenInfante)
+    console.log("grado_desnutricion_red", prediction)
 
-    if (FetchingData(data)) {
-      setIdDeteccion(Math.random() * (100 - 0) + 0)
+    const formData = new FormData()
+    formData.append("id", idInfante)
+    formData.append("nombre", nombreInfante)
+    formData.append("edad", edadInfante)
+    formData.append("sexo", sexoInfante)
+    formData.append("peso", pesoInfante)
+    formData.append("talla", tallaInfante)
+    formData.append("imagen_path", imagenInfante)
+    formData.append("grado_desnutricion_red", prediction)
+
+    console.log(formData)
+
+    const isFetched = await FetchingData(formData)
+
+    if (isFetched) {
+      console.log("Entró a antes del router push: ", idDeteccion)
       router.push(`resultado/${idInfante}/${idDeteccion}`)
-    }
+    } */
   }
 
   return (

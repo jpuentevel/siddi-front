@@ -2,9 +2,6 @@ import * as tf from '@tensorflow/tfjs';
 
 export const usingDetectionModel = async (imgData) => {
 
-    console.log("typeof imgData: ", typeof imgData)
-    console.log("Entró a usingDetectionModel: ", imgData);
-
     // Define las etiquetas de las clases
     const classLabels = ["0DS", "1DS", "2DS", "3DS"];
 
@@ -15,9 +12,6 @@ export const usingDetectionModel = async (imgData) => {
 
     // Carga del modelo
     const model = await tf.loadLayersModel(modelPath);
-
-    // Verificar las dimensiones de entrada esperadas
-    console.log("Dimensiones de entrada del modelo:", model.inputs[0].shape);
 
     try {
         // Convertir a tensor con dimensiones correctas
@@ -34,8 +28,6 @@ export const usingDetectionModel = async (imgData) => {
 
         // Obtiene la etiqueta de la clase predicha
         const predictedClassLabel = classLabels[predictedClassIndex];
-
-        console.log("Predicción from usingDetectionModel: ", predictedClassLabel);
 
         // Limpieza de memoria
         imgTensor.dispose();

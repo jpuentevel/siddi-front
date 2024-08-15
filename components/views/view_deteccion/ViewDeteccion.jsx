@@ -15,7 +15,6 @@ const ViewDeteccion = () => {
   const [pesoInfante, setPesoInfante] = useState(0);
   const [tallaInfante, setTallaInfante] = useState(0);
   const [imagenInfante, setImagenInfante] = useState(null);
-  const [tensorImg, setTensorImg] = useState(null)
   const [prediction, setPrediction] = useState("");
   const [idDeteccion, setIdDeteccion] = useState(0)
 
@@ -93,6 +92,7 @@ const ViewDeteccion = () => {
         const result = await usingDetectionModel(imgFromBlob)
         setPrediction(result);
         console.log("Predicción from GetPrediction: ", result);
+        console.log("Predicción from useState: ", prediction);
       } catch (error) {
         console.log('Error from GetPrediction:', error);
       }

@@ -38,9 +38,7 @@ export const usingDetectionModel = async (imgData) => {
         console.log("Predicción from usingDetectionModel: ", predictedClassLabel);
 
         // Limpieza de memoria
-        /* if (imgTensor !== imgData) {
-            imgTensor.dispose();
-        } */
+        imgTensor.dispose();
         prediction.dispose();
 
         return predictedClassLabel;

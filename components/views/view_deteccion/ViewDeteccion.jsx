@@ -145,34 +145,6 @@ const ViewDeteccion = () => {
     } catch (error) {
       console.log("Error img en handle submit: ", error)
     }
-
-    /* console.log("id", idInfante)
-    console.log("nombre", nombreInfante)
-    console.log("edad", edadInfante)
-    console.log("sexo", sexoInfante)
-    console.log("peso", pesoInfante)
-    console.log("talla", tallaInfante)
-    console.log("imagen_path", imagenInfante)
-    console.log("grado_desnutricion_red", prediction)
-
-    const formData = new FormData()
-    formData.append("id", idInfante)
-    formData.append("nombre", nombreInfante)
-    formData.append("edad", edadInfante)
-    formData.append("sexo", sexoInfante)
-    formData.append("peso", pesoInfante)
-    formData.append("talla", tallaInfante)
-    formData.append("imagen_path", imagenInfante)
-    formData.append("grado_desnutricion_red", prediction)
-
-    console.log(formData)
-
-    const isFetched = await FetchingData(formData)
-
-    if (isFetched) {
-      console.log("Entró a antes del router push: ", idDeteccion)
-      router.push(`resultado/${idInfante}/${idDeteccion}`)
-    } */
   }
 
   return (

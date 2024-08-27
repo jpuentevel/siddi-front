@@ -1,58 +1,47 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'
-import { usingDetectionModel } from '@/functions/using_detection_model/UsingDetectionModel';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { usingDetectionModel } from "@/functions/using_detection_model/UsingDetectionModel";
 
 const ViewDeteccion = () => {
-
   const router = useRouter();
 
-  const [idInfante, setIdInfante] = useState("")
-  const [nombreInfante, setNombreInfante] = useState("")
-  const [edadInfante, setEdadInfante] = useState(0)
-  const [sexoInfante, setSexoInfante] = useState("H")
-  const [pesoInfante, setPesoInfante] = useState(0)
-  const [tallaInfante, setTallaInfante] = useState(0)
-  const [imagenInfante, setImagenInfante] = useState(null)
-  const [prediction, setPrediction] = useState("")
-  const [idDeteccion, setIdDeteccion] = useState(0)
+  const [idInfante, setIdInfante] = useState("");
+  const [nombreInfante, setNombreInfante] = useState("");
+  const [edadInfante, setEdadInfante] = useState(0);
+  const [sexoInfante, setSexoInfante] = useState("H");
+  const [pesoInfante, setPesoInfante] = useState(0);
+  const [tallaInfante, setTallaInfante] = useState(0);
+  const [imagenInfante, setImagenInfante] = useState(null);
+  const [prediction, setPrediction] = useState("");
+  const [idDeteccion, setIdDeteccion] = useState(0);
 
   const HandleIdInfanteChange = (e) => {
     setIdInfante(e.target.value);
-  }
+  };
   const HandleNombreInfanteChange = (e) => {
     setNombreInfante(e.target.value);
-  }
+  };
   const HandleEdadInfanteChange = (e) => {
     setEdadInfante(e.target.value);
-  }
+  };
   const HandleSexoInfanteChange = (e) => {
     setSexoInfante(e.target.value);
-  }
+  };
   const HandlePesoInfanteChange = (e) => {
     setPesoInfante(e.target.value);
-  }
+  };
   const HandleTallaInfanteChange = (e) => {
     setTallaInfante(e.target.value);
-  }
+  };
   const HandleImagenInfanteChange = (e) => {
     setImagenInfante(e.target.files[0]);
-  }
+  };
 
   useEffect(() => {
     if (prediction) {
       const sendFormData = async () => {
-
-        console.log("id", idInfante)
-        console.log("nombre", nombreInfante)
-        console.log("edad", edadInfante)
-        console.log("sexo", sexoInfante)
-        console.log("peso", pesoInfante)
-        console.log("talla", tallaInfante)
-        console.log("imagen_path", imagenInfante)
-        console.log("grado_desnutricion_red", prediction)
-
         const formData = new FormData();
         formData.append("id", idInfante);
         formData.append("nombre", nombreInfante);
@@ -63,89 +52,92 @@ const ViewDeteccion = () => {
         formData.append("imagen_path", imagenInfante);
         formData.append("grado_desnutricion_red", prediction);
 
-        console.log(formData);
-
         const isFetched = await FetchingData(formData);
-
-        if (isFetched) {
-          console.log("Entró a antes del router push: ", idDeteccion);
-          router.push(`resultado/${idInfante}/${idDeteccion}`);
-        }
       };
 
       sendFormData();
     }
   }, [prediction]);
 
+  useEffect(() => {
+    if (idDeteccion) {
+      router.push(`resultado/${idInfante}/${idDeteccion}`);
+    }
+  }, [idDeteccion]);
+
   const blobToImage = async (imageBitmap) => {
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     canvas.width = imageBitmap.width;
     canvas.height = imageBitmap.height;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     ctx.drawImage(imageBitmap, 0, 0);
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-    return imageData
-  }
+    return imageData;
+  };
 
   const GetPrediction = async (file) => {
-
-    const formDataImg = new FormData()
-    formDataImg.append("imagen_path", file)
+    const formDataImg = new FormData();
+    formDataImg.append("imagen_path", file);
 
     try {
-      const response = await fetch('https://whale-app-cka7j.ondigitalocean.app/imagen', {
-        method: 'POST',
-        body: formDataImg
-      });
+      const response = await fetch(
+        "https://whale-app-cka7j.ondigitalocean.app/imagen",
+        {
+          method: "POST",
+          body: formDataImg,
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
 
       const resultFetch = await response.blob();
       const imageBitmap = await createImageBitmap(resultFetch);
-      const imgFromBlob = await blobToImage(imageBitmap)
+      const imgFromBlob = await blobToImage(imageBitmap);
 
       try {
-        const result = await usingDetectionModel(imgFromBlob)
+        const result = await usingDetectionModel(imgFromBlob);
         setPrediction(result);
       } catch (error) {
-        console.log('Error from GetPrediction:', error);
+        console.log("Error from GetPrediction:", error);
       }
-
     } catch (error) {
-      console.error('Error GetPrediction: ', error);
+      console.error("Error GetPrediction: ", error);
     }
-  }
+  };
 
   const FetchingData = async (data) => {
-
-    const response = await fetch('https://whale-app-cka7j.ondigitalocean.app/infantes', {
-      method: 'POST',
-      body: data
-    })
+    const response = await fetch(
+      "https://whale-app-cka7j.ondigitalocean.app/infantes",
+      {
+        method: "POST",
+        body: data,
+      }
+    );
 
     if (!response.ok) {
-      throw new Error('Network response was not ok on FetchingData');
+      throw new Error("Network response was not ok on FetchingData");
     } else {
-      response.json().then(body => setIdDeteccion(body.estado_id));
-      console.log("Cambió idDeteccion")
+      response.json().then((body) => {
+        setIdDeteccion(body.estado_id);
+      });
     }
 
-    return response.ok
-  }
+    return response.ok;
+  };
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await GetPrediction(imagenInfante)
+      await GetPrediction(imagenInfante);
     } catch (error) {
-      console.log("Error img en handle submit: ", error)
+      console.log("Error img en handle submit: ", error);
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center p-4 bg-purple-200">
@@ -250,7 +242,9 @@ const ViewDeteccion = () => {
             onChange={HandleImagenInfanteChange}
             required
           />
-          <p className="sm:text-lg text-base leading-tight text-purple-700 mt-2">Sólo se permiten archivos PNG y JPG.</p>
+          <p className="sm:text-lg text-base leading-tight text-purple-700 mt-2">
+            Sólo se permiten archivos PNG y JPG.
+          </p>
         </div>
         {/* <div className="flex flex-col items-center mt-3">
           <Image
@@ -271,7 +265,7 @@ const ViewDeteccion = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ViewDeteccion
+export default ViewDeteccion;

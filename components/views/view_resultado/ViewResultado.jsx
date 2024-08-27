@@ -1,22 +1,71 @@
-"use client"
+"use client";
 
-import React from 'react'
-import { useState } from 'react';
-import Link from 'next/link'
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const ViewResultado = (props) => {
-
-  const FECHA = "18-07-2024"
-  const NOMBRE = "José Alejandro Puente Velásquez"
-  const PESO = 90
-  const TALLA = 180
-
   const [idInfante, setIdInfante] = useState(props.docInfante);
-  const [nombreInfante, setNombreInfante] = useState(NOMBRE);
-  const [pesoInfante, setPesoInfante] = useState(PESO);
-  const [tallaInfante, setTallaInfante] = useState(TALLA);
-  const [fechaInfante, setFechaInfante] = useState(FECHA);
+  const [idPrediccion, setIdPrediccion] = useState(props.idDeteccion);
+  const [nombreInfante, setNombreInfante] = useState("");
+  const [pesoInfante, setPesoInfante] = useState(0);
+  const [tallaInfante, setTallaInfante] = useState(0);
+  const [fechaInfante, setFechaInfante] = useState("");
+  const [edadInfante, setEdadInfante] = useState(0);
+  const [sexoInfante, setSexoInfante] = useState("H");
+  const [desICBF, setDesICBF] = useState("");
+  const [desRed, setDesRed] = useState("");
 
+  /* "id": 2,
+  "infante_id": 123,
+  "fecha": "2024-07-18 00:00:00",
+  "peso": 80.0,
+  "talla": 1.69,
+  "edad": 22,
+  "grado_desnutricion_icbf": "0",
+  "grado_desnutricion_red": "0",
+  "imagen_path": "http://whale-app-cka7j.ondigitalocean.app/uploads/1f8bc2a9a2d2ea6f007b4100dd3e5f73--kid-goku-anime-motivational-posters.jpg",
+  "infante_nombre": "ele",
+  "infante_sexo": "M" */
+
+  useEffect(() => {
+    console.log(
+      "get: ",
+      `https://whale-app-cka7j.ondigitalocean.app/estado/${idPrediccion}`
+    );
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://whale-app-cka7j.ondigitalocean.app/estado/${idPrediccion}`,
+          {
+            method: "GET",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            "Network response was not ok at Result: " + response.status
+          );
+        } else {
+          const body = await response.json(); // Aquí se consume la respuesta una sola vez
+          console.log("Response Result: ", body);
+          setIdPrediccion(body.id);
+          setIdInfante(body.infante_id);
+          setFechaInfante(body.fecha);
+          setPesoInfante(body.peso);
+          setTallaInfante(body.talla);
+          setEdadInfante(body.edad);
+          setDesICBF(body.grado_desnutricion_icbf);
+          setDesRed(body.grado_desnutricion_red);
+          setNombreInfante(body.infante_nombre);
+          setSexoInfante(body.infante_sexo);
+        }
+      } catch (e) {
+        console.error("Error Result: ", e);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col items-center p-4 bg-purple-200">
@@ -49,9 +98,7 @@ const ViewResultado = (props) => {
         <p className="sm:text-3xl text-lg mt-5 text-gray-900 leading-relaxed text-justify">
           Según la vaina vieja del ICBF, el resultado de la predicción del
           estado de desnutrición del infante es:
-          <b className="text-purple-700 ml-2">
-            Desnutrición media
-          </b>
+          <b className="text-purple-700 ml-2">Desnutrición media</b>
         </p>
       </div>
       <div className="max-w-2xl shadow-lg rounded-md my-3 p-3 bg-purple-100">
@@ -62,9 +109,7 @@ const ViewResultado = (props) => {
           Según la evaluación realizada por el modelo avanzando de Inteligencia
           Artificial, el resultado de la predicción del estado de desnutrición
           del infante es:
-          <b className="text-purple-700 ml-2">
-            Desnutrición media
-          </b>
+          <b className="text-purple-700 ml-2">Desnutrición media</b>
         </p>
       </div>
       <div className="flex flex-col items-center my-3">
@@ -84,7 +129,7 @@ const ViewResultado = (props) => {
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ViewResultado
+export default ViewResultado;

@@ -14,6 +14,8 @@ const ViewResultado = (props) => {
   const [sexoInfante, setSexoInfante] = useState("H");
   const [desICBF, setDesICBF] = useState("");
   const [desRed, setDesRed] = useState("");
+  const [desTextICBF, setDesTextICBF] = useState("");
+  const [desTextRed, setDesTextRed] = useState("");
 
   /* "id": 2,
   "infante_id": 123,
@@ -28,10 +30,6 @@ const ViewResultado = (props) => {
   "infante_sexo": "M" */
 
   useEffect(() => {
-    console.log(
-      "get: ",
-      `https://whale-app-cka7j.ondigitalocean.app/estado/${idPrediccion}`
-    );
     const fetchData = async () => {
       try {
         const response = await fetch(
@@ -54,8 +52,8 @@ const ViewResultado = (props) => {
           setPesoInfante(body.peso);
           setTallaInfante(body.talla);
           setEdadInfante(body.edad);
-          setDesICBF(body.grado_desnutricion_icbf);
-          setDesRed(body.grado_desnutricion_red);
+          setDesICBF(DesnutritionText(body.grado_desnutricion_icbf));
+          setDesRed(DesnutritionText(body.grado_desnutricion_red));
           setNombreInfante(body.infante_nombre);
           setSexoInfante(body.infante_sexo);
         }
@@ -66,6 +64,11 @@ const ViewResultado = (props) => {
 
     fetchData();
   }, []);
+
+  const DesnutritionText = (des) => {
+    console.log("des: " + des)
+    return des == "1DS" ? "DESNUTRICIÓN BAJA" : desICBF == "2DS" ? "DESNUTRICIÓN MEDIA" : desICBF == "3DS" ? "DESNUTRICIÓN ALTA" : "PESO NORMAL";
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center p-4 bg-purple-200">
@@ -78,27 +81,29 @@ const ViewResultado = (props) => {
         </p>
         <div className="grid grid-cols-2">
           <div className="border-t border-r border-purple-700 text-center sm:text-3xl text-lg text-gray-900 leading-relaxed p-3">
-            {nombreInfante}
+            <b className="text-purple-700">Nombre: </b> {nombreInfante}
           </div>
           <div className="border-t border-purple-700 text-center sm:text-3xl text-lg text-gray-900 leading-relaxed p-3">
-            {idInfante}
+            <b className="text-purple-700">Documento: </b> {idInfante}
           </div>
           <div className="border-t border-r border-purple-700 text-center sm:text-3xl text-lg text-gray-900 leading-relaxed p-3">
-            {pesoInfante} kg
+            <b className="text-purple-700">Peso: </b> {pesoInfante} kg
           </div>
           <div className="border-t  border-purple-700 text-center sm:text-3xl text-lg text-gray-900 leading-relaxed p-3">
-            {tallaInfante} cm
+            <b className="text-purple-700">Talla: </b> {tallaInfante} cm
           </div>
         </div>
       </div>
       <div className="max-w-2xl shadow-lg rounded-md my-3 p-3 bg-purple-100">
         <h2 className="text-purple-700 font-semibold my-2 sm:text-3xl text-lg">
-          Resultado vaina ICBF
+          Resultado cálculo de Peso para la Talla ICBF
         </h2>
         <p className="sm:text-3xl text-lg mt-5 text-gray-900 leading-relaxed text-justify">
-          Según la vaina vieja del ICBF, el resultado de la predicción del
-          estado de desnutrición del infante es:
-          <b className="text-purple-700 ml-2">Desnutrición media</b>
+          Según el cálculo del estado de desnutrición del infante, según el peso 
+          para la talla del mismo, y realizado bajo la metodología de la tabla 
+          del ICBF correspondiente, el resultado de la predicción del estado de 
+          desnutrición del infante es:
+          <b className="text-purple-700 ml-2">{desICBF}</b>
         </p>
       </div>
       <div className="max-w-2xl shadow-lg rounded-md my-3 p-3 bg-purple-100">
@@ -109,7 +114,7 @@ const ViewResultado = (props) => {
           Según la evaluación realizada por el modelo avanzando de Inteligencia
           Artificial, el resultado de la predicción del estado de desnutrición
           del infante es:
-          <b className="text-purple-700 ml-2">Desnutrición media</b>
+          <b className="text-purple-700 ml-2">{desRed}</b>
         </p>
       </div>
       <div className="flex flex-col items-center my-3">

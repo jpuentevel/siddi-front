@@ -9,13 +9,13 @@ const ViewDeteccion = () => {
 
   const [idInfante, setIdInfante] = useState("");
   const [nombreInfante, setNombreInfante] = useState("");
-  const [edadInfante, setEdadInfante] = useState(0);
+  const [edadInfante, setEdadInfante] = useState(null);
   const [sexoInfante, setSexoInfante] = useState("H");
-  const [pesoInfante, setPesoInfante] = useState(0);
-  const [tallaInfante, setTallaInfante] = useState(0);
+  const [pesoInfante, setPesoInfante] = useState(null);
+  const [tallaInfante, setTallaInfante] = useState(null);
   const [imagenInfante, setImagenInfante] = useState(null);
   const [prediction, setPrediction] = useState("");
-  const [idDeteccion, setIdDeteccion] = useState(0);
+  const [idDeteccion, setIdDeteccion] = useState("");
 
   const HandleIdInfanteChange = (e) => {
     setIdInfante(e.target.value);
@@ -39,6 +39,24 @@ const ViewDeteccion = () => {
     setImagenInfante(e.target.files[0]);
   };
 
+  const HandleFocusoutEdad = (e) => {
+    if (e.target.value < 0) {
+      setEdadInfante(0);
+    }
+    else if (e.target.value > 5) {
+      setEdadInfante(5);
+    }
+  }
+  const HandleFocusoutPeso = (e) => {
+    if (e.target.value < 0) {
+      setEdadPeso(0);
+    }
+  }
+  const HandleFocusoutTalla = (e) => {
+    if (e.target.value < 0) {
+      setEdadTalla(0);
+    }
+  }
   useEffect(() => {
     if (prediction) {
       const sendFormData = async () => {
@@ -184,6 +202,9 @@ const ViewDeteccion = () => {
             placeholder="5"
             value={edadInfante}
             onChange={HandleEdadInfanteChange}
+            min={0}
+            max={5}
+            onfocusout={HandleFocusoutEdad}
             required
           ></input>
         </div>
@@ -213,6 +234,8 @@ const ViewDeteccion = () => {
             placeholder="30"
             value={pesoInfante}
             onChange={HandlePesoInfanteChange}
+            min={0}
+            onfocusout={HandleFocusoutPeso}
             required
           ></input>
         </div>
@@ -227,6 +250,8 @@ const ViewDeteccion = () => {
             placeholder="100"
             value={tallaInfante}
             onChange={HandleTallaInfanteChange}
+            min={0}
+            onfocusout={HandleFocusoutTalla}
             required
           ></input>
         </div>

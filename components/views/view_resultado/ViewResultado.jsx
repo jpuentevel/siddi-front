@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { FormattingDate } from "@/functions/formatting_date/FormattingDate";
 
 const ViewResultado = (props) => {
   const [idInfante, setIdInfante] = useState(props.docInfante);
@@ -10,12 +11,8 @@ const ViewResultado = (props) => {
   const [pesoInfante, setPesoInfante] = useState(0);
   const [tallaInfante, setTallaInfante] = useState(0);
   const [fechaInfante, setFechaInfante] = useState("");
-  const [edadInfante, setEdadInfante] = useState(0);
-  const [sexoInfante, setSexoInfante] = useState("H");
   const [desICBF, setDesICBF] = useState("");
   const [desRed, setDesRed] = useState("");
-  const [desTextICBF, setDesTextICBF] = useState("");
-  const [desTextRed, setDesTextRed] = useState("");
 
   /* "id": 2,
   "infante_id": 123,
@@ -48,14 +45,12 @@ const ViewResultado = (props) => {
           console.log("Response Result: ", body);
           setIdPrediccion(body.id);
           setIdInfante(body.infante_id);
-          setFechaInfante(body.fecha);
+          setFechaInfante(FormattingDate(body.fecha));
           setPesoInfante(body.peso);
           setTallaInfante(body.talla);
-          setEdadInfante(body.edad);
           setDesICBF(DesnutritionText(body.grado_desnutricion_icbf));
           setDesRed(DesnutritionText(body.grado_desnutricion_red));
           setNombreInfante(body.infante_nombre);
-          setSexoInfante(body.infante_sexo);
         }
       } catch (e) {
         console.error("Error Result: ", e);
@@ -118,14 +113,6 @@ const ViewResultado = (props) => {
         </p>
       </div>
       <div className="flex flex-col items-center my-3">
-        {/* <button
-            href="#"
-            type="submit"
-            className="w-64 focus:outline-none text-purple-200 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-center text-xl px-3 py-2.5 mt-3 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
-            onSubmit={handleSubmit}
-          >
-            Realizar Deteccion
-          </button> */}
         <Link
           href="/"
           className="w-64 focus:outline-none text-purple-200 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-center text-xl px-3 py-2.5 mt-3 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"

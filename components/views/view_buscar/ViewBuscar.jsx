@@ -1,6 +1,5 @@
 "use client"
 
-import React from 'react'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'
 
@@ -14,34 +13,9 @@ const ViewRegistros = () => {
     setDocInfante(e.target.value);
   }
 
-  const FetchingData = () => {
-    const data = {
-      id: docInfante
-    }
-
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    }
-
-    //Falta que Ele ajuste la API para seguir con fetch
-
-    return 0
-  }
-
-  const HandleSubmit = (e) => {
+  const HandleSubmit = async (e) => {
     e.preventDefault();
-
-    const result = FetchingData()
-
-    if (result == null) {
-      //mensaje de error
-    }
-
-    else {
-      router.push(`/resultado/${docInfante}`)
-    }
+    router.push(`/resultado/${docInfante}`)
   }
 
   return (

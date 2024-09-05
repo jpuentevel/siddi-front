@@ -49,7 +49,9 @@ const ViewResultado = (props) => {
           setPesoInfante(body.peso);
           setTallaInfante(body.talla);
           setDesICBF(DesnutritionText(body.grado_desnutricion_icbf));
+          console.log("des icbf: " + desICBF);
           setDesRed(DesnutritionText(body.grado_desnutricion_red));
+          console.log("des red: " + desRed);
           setNombreInfante(body.infante_nombre);
         }
       } catch (e) {
@@ -61,7 +63,7 @@ const ViewResultado = (props) => {
   }, []);
 
   const DesnutritionText = (des) => {
-    console.log("des: " + des)
+    console.log("des from function: " + des)
     return des == "1DS" ? "DESNUTRICIÓN BAJA" : desICBF == "2DS" ? "DESNUTRICIÓN MEDIA" : desICBF == "3DS" ? "DESNUTRICIÓN ALTA" : "PESO NORMAL";
   }
 

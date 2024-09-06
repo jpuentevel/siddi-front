@@ -9,7 +9,7 @@ const rosarivo = Rosarivo({
 
 const ViewHome = () => {
     return (
-        <main className="flex min-h-screen flex-col items-center p-12 bg-purple-200">
+        <main className="flex min-h-screen flex-col items-center p-12 bg-purple-100">
 
             <div className="flex flex-col items-center mb-5">
                 <h1 className={`${rosarivo.className} text-9xl mb-5 text-purple-700`}>SIDDI</h1>

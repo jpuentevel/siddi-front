@@ -3,7 +3,9 @@ import ViewTablaDetecciones from '@/components/views/view_tabla_detecciones/View
 
 const TablaDetecciones = (props) => {
 
-    const docInfante = props.params.doc_infante;
+    console.log(props);
+
+    const docInfante = props.infante;
 
     return (
         <ViewTablaDetecciones infante={docInfante} />

@@ -41,17 +41,15 @@ const ViewResultado = (props) => {
             "Network response was not ok at Result: " + response.status
           );
         } else {
-          const body = await response.json(); // Aquí se consume la respuesta una sola vez
+          const body = await response.json();
           console.log("Response Result: ", body);
           setIdPrediccion(body.id);
           setIdInfante(body.infante_id);
           setFechaInfante(FormattingDate(body.fecha));
           setPesoInfante(body.peso);
           setTallaInfante(body.talla);
-          setDesICBF(DesnutritionText(body.grado_desnutricion_icbf));
-          console.log("des icbf: " + desICBF);
-          setDesRed(DesnutritionText(body.grado_desnutricion_red));
-          console.log("des red: " + desRed);
+          setDesICBF(body.grado_desnutricion_icbf);
+          setDesRed(body.grado_desnutricion_red);
           setNombreInfante(body.infante_nombre);
         }
       } catch (e) {
@@ -63,16 +61,16 @@ const ViewResultado = (props) => {
   }, []);
 
   const DesnutritionText = (des) => {
-    console.log("des from function: " + des)
-    return des == "1DS" ? "DESNUTRICIÓN BAJA" : desICBF == "2DS" ? "DESNUTRICIÓN MEDIA" : desICBF == "3DS" ? "DESNUTRICIÓN ALTA" : "PESO NORMAL";
+    console.log(des)
+    return des == "1DS" ? "DESNUTRICIÓN BAJA" : des == "2DS" ? "DESNUTRICIÓN MEDIA" : des == "3DS" ? "DESNUTRICIÓN ALTA" : "PESO NORMAL";
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-4 bg-purple-200">
+    <div className="flex min-h-screen flex-col items-center p-4 bg-purple-100">
       <h1 className="sm:text-4xl text-2xl text-center max-w-3xl my-5 text-purple-700">
         <b>Resultados de la detección</b>
       </h1>
-      <div className="max-w-2xl shadow-lg rounded-md my-3 bg-purple-100">
+      <div className="max-w-2xl shadow-lg rounded-md my-3 bg-purple-50">
         <p className="p-3 sm:text-3xl text-center text-lg text-gray-900 leading-relaxed">
           {fechaInfante}
         </p>
@@ -91,7 +89,7 @@ const ViewResultado = (props) => {
           </div>
         </div>
       </div>
-      <div className="max-w-2xl shadow-lg rounded-md my-3 p-3 bg-purple-100">
+      <div className="max-w-2xl shadow-lg rounded-md my-3 p-3 bg-purple-50">
         <h2 className="text-purple-700 font-semibold my-2 sm:text-3xl text-lg">
           Resultado cálculo de Peso para la Talla ICBF
         </h2>
@@ -100,10 +98,10 @@ const ViewResultado = (props) => {
           para la talla del mismo, y realizado bajo la metodología de la tabla 
           del ICBF correspondiente, el resultado de la predicción del estado de 
           desnutrición del infante es:
-          <b className="text-purple-700 ml-2">{desICBF}</b>
+          <b className="text-purple-700 ml-2">{DesnutritionText(desICBF)}</b>
         </p>
       </div>
-      <div className="max-w-2xl shadow-lg rounded-md my-3 p-3 bg-purple-100">
+      <div className="max-w-2xl shadow-lg rounded-md my-3 p-3 bg-purple-50">
         <h2 className="text-purple-700 font-semibold my-2 sm:text-3xl text-lg">
           Resultado Modelo IA
         </h2>
@@ -111,13 +109,13 @@ const ViewResultado = (props) => {
           Según la evaluación realizada por el modelo avanzando de Inteligencia
           Artificial, el resultado de la predicción del estado de desnutrición
           del infante es:
-          <b className="text-purple-700 ml-2">{desRed}</b>
+          <b className="text-purple-700 ml-2">{DesnutritionText(desRed)}</b>
         </p>
       </div>
       <div className="flex flex-col items-center my-3">
         <Link
           href="/"
-          className="w-64 focus:outline-none text-purple-200 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-center text-xl px-3 py-2.5 mt-3 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+          className="w-64 focus:outline-none text-purple-50 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-center text-xl px-3 py-2.5 mt-3 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
         >
           Volver al inicio
         </Link>

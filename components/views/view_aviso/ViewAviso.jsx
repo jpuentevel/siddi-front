@@ -4,7 +4,7 @@ import Link from 'next/link'
 const ViewAviso = () => {
     return (
         <>
-            <div className="flex min-h-screen flex-col items-center p-12 bg-purple-200">
+            <div className="flex min-h-screen flex-col items-center p-12 bg-purple-100">
                 <div className="flex flex-col items-center mb-5">
                     <h1 className="sm:text-5xl text-3xl text-center max-w-3xl mt-5 text-purple-700">
                         <b>Aviso Importante</b>

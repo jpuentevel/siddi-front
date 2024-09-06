@@ -158,7 +158,7 @@ const ViewDeteccion = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-4 bg-purple-200">
+    <div className="flex min-h-screen flex-col items-center p-4 bg-purple-100">
       <h1 className="sm:text-4xl text-2xl text-center max-w-3xl my-5 text-purple-700">
         <b>Datos básicos del infante</b>
       </h1>

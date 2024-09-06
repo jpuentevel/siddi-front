@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import Link from "next/link";
-import { FormattingDate } from '@/functions/formatting_date/FormattingDate';
 import ButtonVerDeteccion from "@/components/utils/button_ver_deteccion/ButtonVerDeteccion"
+import TablaDetecciones from '@/app/resultado/[doc_infante]/page';
 
 const ViewTablaDetecciones = (props) => {
 
     const [detecciones, setDetecciones] = useState([])
-    const [textTitulo, setTextTitulo] = useState("No hay datos disponibles para mostrar.")
+    const [textTitulo, setTextTitulo] = useState("No hay datos disponibles para mostrar ")
 
     useEffect(() => {
         const fetchData = async () => {
@@ -68,10 +68,15 @@ const ViewTablaDetecciones = (props) => {
     ] */
 
     return (
-        <div className="flex min-h-screen flex-col items-center p-12 bg-purple-200">
-            <div>
+        <div className="flex min-h-screen flex-col items-center p-12 bg-purple-100">
+            <div className="my-6">
+                <h1 className="sm:text-3xl text-2xl text-center max-w-3xl my-5 text-gray-900">
+                    {textTitulo} <b className="text-purple-700">{props.infante}</b>
+                </h1>
+            </div>
+            {/* <div>
                 <div className="my-6">
-                    <h1 className="sm:text-2xl text-xl text-center max-w-3xl my-5 text-gray-900">
+                    <h1 className="sm:text-3xl text-2xl text-center max-w-3xl my-5 text-gray-900">
                         {textTitulo} <b className="text-purple-700">{props.infante}</b>
                     </h1>
                 </div>
@@ -86,7 +91,8 @@ const ViewTablaDetecciones = (props) => {
                 ) : (
                     <p>No hay datos disponibles</p>
                 )}
-            </div>
+            </div> */}
+            <TablaDetecciones infante={props.infante} detecciones={detecciones} />
             <div className="flex flex-col items-center my-3">
                 <Link
                     href="/"

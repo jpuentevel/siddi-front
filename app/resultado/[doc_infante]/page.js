@@ -1,15 +1,13 @@
 import React from 'react'
-import ViewTablaDetecciones from '@/components/views/view_tabla_detecciones/ViewTablaDetecciones'
+import ViewDetecciones from '@/components/views/view_detecciones/ViewDetecciones'
 
-const TablaDetecciones = (props) => {
+const Detecciones = (props) => {
 
-    console.log(props);
-
-    const docInfante = props.infante;
+    const docInfante = props.params.doc_infante;
 
     return (
-        <ViewTablaDetecciones infante={docInfante} />
+        <ViewDetecciones infante={docInfante} />
     )
 }
 
-export default TablaDetecciones
+export default Detecciones

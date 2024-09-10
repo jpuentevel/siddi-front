@@ -12,28 +12,28 @@ const ViewHome = () => {
         <main className="flex min-h-screen flex-col items-center p-12 bg-purple-100">
 
             <div className="flex flex-col items-center mb-5">
-                <h1 className={`${rosarivo.className} text-9xl mb-5 text-purple-700`}>SIDDI</h1>
-                <h2 className="text-4xl max-w-3xl mt-5 text-gray-900 text-center">El <b className="text-purple-700">Sistema de Detección de Desnutrición Infantil</b> especialmente diseñado para poblaciones rurales y alejadas.</h2>
+                <h1 className={`${rosarivo.className} sm:text-9xl text-6xl mb-5 text-purple-700`}>SIDDI</h1>
+                <h2 className="sm:text-4xl text-2xl max-w-3xl mt-5 text-gray-900 text-center">El <b className="text-purple-700">Sistema de Detección de Desnutrición Infantil</b> especialmente diseñado para poblaciones rurales y alejadas.</h2>
             </div>
 
             <div className="flex flex-col items-center mt-5 mb-5">
-                <h3 className="text-3xl max-w-3xl mt-5 text-gray-900">
+                <h3 className="sm:text-3xl text-xl max-w-3xl mt-5 text-gray-900">
                     Este sistema lo ayudará a detectar la desnutrición en infantes, clasificándola en las siguientes 4 categorías:
                 </h3>
                 <ol>
-                    <li className="text-3xl mt-5 text-gray-900">
+                    <li className="sm:text-3xl text-xl mt-5 text-gray-900">
                         <b className="text-purple-700 mr-5">0.</b>
                         Peso normal.
                     </li>
-                    <li className="text-3xl mt-5 text-gray-900">
+                    <li className="sm:text-3xl text-xl mt-5 text-gray-900">
                         <b className="text-purple-700 mr-5">1.</b>
                         Desnutrición leve.
                     </li>
-                    <li className="text-3xl mt-5 text-gray-900">
+                    <li className="sm:text-3xl text-xl mt-5 text-gray-900">
                         <b className="text-purple-700 mr-5">2.</b>
                         Desnutrición moderada.
                     </li>
-                    <li className="text-3xl mt-5 text-gray-900">
+                    <li className="sm:text-3xl text-xl mt-5 text-gray-900">
                         <b className="text-purple-700 mr-5">3.</b>
                         Desnutrición grave.
                     </li>

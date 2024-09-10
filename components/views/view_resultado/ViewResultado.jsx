@@ -14,18 +14,6 @@ const ViewResultado = (props) => {
   const [desICBF, setDesICBF] = useState("");
   const [desRed, setDesRed] = useState("");
 
-  /* "id": 2,
-  "infante_id": 123,
-  "fecha": "2024-07-18 00:00:00",
-  "peso": 80.0,
-  "talla": 1.69,
-  "edad": 22,
-  "grado_desnutricion_icbf": "0",
-  "grado_desnutricion_red": "0",
-  "imagen_path": "http://whale-app-cka7j.ondigitalocean.app/uploads/1f8bc2a9a2d2ea6f007b4100dd3e5f73--kid-goku-anime-motivational-posters.jpg",
-  "infante_nombre": "ele",
-  "infante_sexo": "M" */
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,7 +30,6 @@ const ViewResultado = (props) => {
           );
         } else {
           const body = await response.json();
-          console.log("Response Result: ", body);
           setIdPrediccion(body.id);
           setIdInfante(body.infante_id);
           setFechaInfante(FormattingDate(body.fecha));
@@ -72,7 +59,7 @@ const ViewResultado = (props) => {
       </h1>
       <div className="max-w-2xl shadow-lg rounded-md my-3 bg-purple-50">
         <p className="p-3 sm:text-3xl text-center text-lg text-gray-900 leading-relaxed">
-          {fechaInfante}
+          <b className="text-purple-700">Fecha: </b>{fechaInfante}
         </p>
         <div className="grid grid-cols-2">
           <div className="border-t border-r border-purple-700 text-center sm:text-3xl text-lg text-gray-900 leading-relaxed p-3">
@@ -94,9 +81,9 @@ const ViewResultado = (props) => {
           Resultado cálculo de Peso para la Talla ICBF
         </h2>
         <p className="sm:text-3xl text-lg mt-5 text-gray-900 leading-relaxed text-justify">
-          Según el cálculo del estado de desnutrición del infante, según el peso 
-          para la talla del mismo, y realizado bajo la metodología de la tabla 
-          del ICBF correspondiente, el resultado de la predicción del estado de 
+          Según el cálculo del estado de desnutrición del infante, según el peso
+          para la talla del mismo, y realizado bajo la metodología de la tabla
+          del ICBF correspondiente, el resultado de la predicción del estado de
           desnutrición del infante es:
           <b className="text-purple-700 ml-2">{DesnutritionText(desICBF)}</b>
         </p>

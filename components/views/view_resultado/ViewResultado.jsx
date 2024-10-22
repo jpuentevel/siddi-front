@@ -49,7 +49,10 @@ const ViewResultado = (props) => {
 
   const DesnutritionText = (des) => {
     console.log(des)
-    return des == "1DS" ? "DESNUTRICIÓN BAJA" : des == "2DS" ? "DESNUTRICIÓN MEDIA" : des == "3DS" ? "DESNUTRICIÓN ALTA" : "PESO NORMAL";
+    return des == "1DS" ? "Riesgo de desnutrición aguda" 
+         : des == "2DS" ? "Desnutrición aguda moderada" 
+         : des == "3DS" ? "Desnutrición aguda severa" 
+         : "Peso adecuado para la talla";
   }
 
   return (

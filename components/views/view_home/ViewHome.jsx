@@ -23,19 +23,19 @@ const ViewHome = () => {
                 <ol>
                     <li className="sm:text-3xl text-xl mt-5 text-gray-900">
                         <b className="text-purple-700 mr-5">0.</b>
-                        Peso normal.
+                        Peso adecuado para la talla.
                     </li>
                     <li className="sm:text-3xl text-xl mt-5 text-gray-900">
                         <b className="text-purple-700 mr-5">1.</b>
-                        Desnutrición leve.
+                        Riesgo de desnutrición aguda.
                     </li>
                     <li className="sm:text-3xl text-xl mt-5 text-gray-900">
                         <b className="text-purple-700 mr-5">2.</b>
-                        Desnutrición moderada.
+                        Desnutrición aguda moderada.
                     </li>
                     <li className="sm:text-3xl text-xl mt-5 text-gray-900">
                         <b className="text-purple-700 mr-5">3.</b>
-                        Desnutrición grave.
+                        Desnutrición aguda severa.
                     </li>
                 </ol>
             </div>

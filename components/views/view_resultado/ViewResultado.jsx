@@ -49,10 +49,10 @@ const ViewResultado = (props) => {
 
   const DesnutritionText = (des) => {
     console.log(des)
-    return des == "1DS" ? "Riesgo de desnutrición aguda" 
-         : des == "2DS" ? "Desnutrición aguda moderada" 
-         : des == "3DS" ? "Desnutrición aguda severa" 
-         : "Peso adecuado para la talla";
+    return des == "1DS" ? "Riesgo de desnutrición aguda"
+      : des == "2DS" ? "Desnutrición aguda moderada"
+        : des == "3DS" ? "Desnutrición aguda severa"
+          : "Peso adecuado para la talla";
   }
 
   return (
@@ -81,24 +81,19 @@ const ViewResultado = (props) => {
       </div>
       <div className="max-w-2xl shadow-lg rounded-md my-3 p-3 bg-purple-50">
         <h2 className="text-purple-700 font-semibold my-2 sm:text-3xl text-lg">
-          Resultado cálculo de Peso para la Talla ICBF
+          Resultado del cálculo con valores numéricos:
         </h2>
         <p className="sm:text-3xl text-lg mt-5 text-gray-900 leading-relaxed text-justify">
-          Según el cálculo del estado de desnutrición del infante, según el peso
-          para la talla del mismo, y realizado bajo la metodología de la tabla
-          del ICBF correspondiente, el resultado de la predicción del estado de
-          desnutrición del infante es:
+          Según los indicadores establecidos por el Ministerio de Salud de Colombia la clasificación antropométrica es:
           <b className="text-purple-700 ml-2">{DesnutritionText(desICBF)}</b>
         </p>
       </div>
       <div className="max-w-2xl shadow-lg rounded-md my-3 p-3 bg-purple-50">
         <h2 className="text-purple-700 font-semibold my-2 sm:text-3xl text-lg">
-          Resultado Modelo IA
+          Resultado del cálculo con el modelo de IA:
         </h2>
         <p className="sm:text-3xl text-lg mt-5 text-gray-900 leading-relaxed text-justify">
-          Según la evaluación realizada por el modelo avanzando de Inteligencia
-          Artificial, el resultado de la predicción del estado de desnutrición
-          del infante es:
+          Según la evaluación realizada por el modelo de inteligencia artificial  la clasificación antropométrica es:
           <b className="text-purple-700 ml-2">{DesnutritionText(desRed)}</b>
         </p>
       </div>
